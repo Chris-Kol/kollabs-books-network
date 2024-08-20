@@ -24,9 +24,9 @@ final class SqlBookRepository implements BookRepositoryInterface
     private DatabaseInterface $db;
     private QueryFactory $queryFactory;
 
-    public function __construct(DatabaseInterface $db)
+    public function __construct(DatabaseInterface $db, QueryFactory $queryFactory)
     {
-        $this->queryFactory = new QueryFactory('mysql');
+        $this->queryFactory = $queryFactory;
         $this->db = $db;
     }
 

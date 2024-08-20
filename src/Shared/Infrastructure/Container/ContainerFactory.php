@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace KollabsBooks\Shared\Infrastructure\Container;
 
+use Aura\SqlQuery\QueryFactory;
 use DI\Container;
 use DI\ContainerBuilder;
 use KollabsBooks\BookCatalog\Application\Service\BookService;
@@ -15,6 +16,9 @@ use KollabsBooks\Shared\Infrastructure\Persistence\DatabaseInterface;
 
 class ContainerFactory
 {
+    /**
+     * @throws \Exception
+     */
     public static function create(): Container
     {
         $containerBuilder = new ContainerBuilder();
@@ -28,6 +32,7 @@ class ContainerFactory
                     $config['password']
                 );
             },
+            'queryFactory' => new QueryFactory('mysql'),
         ]);
 
         // Domain-specific definitions
