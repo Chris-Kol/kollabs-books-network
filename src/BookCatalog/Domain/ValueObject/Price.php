@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace KollabsBooks\Shared\Domain\ValueObject;
+namespace KollabsBooks\BookCatalog\Domain\ValueObject;
 
 final class Price
 {
@@ -18,18 +18,13 @@ final class Price
         $this->currency = $currency;
     }
 
-    public function amount(): int
+    public function getAmount(): int
     {
         return $this->amount;
     }
 
-    public function currency(): string
+    public function getCurrency(): string
     {
         return $this->currency;
-    }
-
-    public function equals(Price $other): bool
-    {
-        return $this->amount === $other->amount && $this->currency === $other->currency;
     }
 }

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace KollabsBooks\BookCatalog\Domain\Repository;
 
 use KollabsBooks\BookCatalog\Domain\Entity\Book;
-use KollabsBooks\Shared\Domain\ValueObject\Uuid;
+use KollabsBooks\BookCatalog\Domain\ValueObject\Uuid;
 
 interface BookRepositoryInterface
 {

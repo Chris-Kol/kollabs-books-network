@@ -6,9 +6,11 @@ namespace KollabsBooks\BookCatalog\Application\Service;
 
 use KollabsBooks\BookCatalog\Domain\Entity\Book;
 use KollabsBooks\BookCatalog\Domain\Repository\BookRepositoryInterface;
-use KollabsBooks\Shared\Domain\ValueObject\Uuid;
-use KollabsBooks\Shared\Domain\ValueObject\Title;
-use KollabsBooks\Shared\Domain\ValueObject\Price;
+use KollabsBooks\BookCatalog\Domain\ValueObject\Author;
+use KollabsBooks\BookCatalog\Domain\ValueObject\Price;
+use KollabsBooks\BookCatalog\Domain\ValueObject\Stock;
+use KollabsBooks\BookCatalog\Domain\ValueObject\Title;
+use KollabsBooks\BookCatalog\Domain\ValueObject\Uuid;
 
 final class BookService implements BookServiceInterface
 {
@@ -30,9 +32,9 @@ final class BookService implements BookServiceInterface
         $book = new Book(
             new Uuid($id),
             new Title($title),
-            $author,
+            new Author($author),
             new Price($priceAmount, $currency),
-            $stock
+            new Stock($stock)
         );
 
         $this->bookRepository->save($book);

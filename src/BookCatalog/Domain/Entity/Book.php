@@ -4,57 +4,51 @@ declare(strict_types=1);
 
 namespace KollabsBooks\BookCatalog\Domain\Entity;
 
-use KollabsBooks\Shared\Domain\ValueObject\Uuid;
-use KollabsBooks\Shared\Domain\ValueObject\Title;
-use KollabsBooks\Shared\Domain\ValueObject\Price;
+use KollabsBooks\BookCatalog\Domain\ValueObject\Author;
+use KollabsBooks\BookCatalog\Domain\ValueObject\Price;
+use KollabsBooks\BookCatalog\Domain\ValueObject\Stock;
+use KollabsBooks\BookCatalog\Domain\ValueObject\Title;
+use KollabsBooks\BookCatalog\Domain\ValueObject\Uuid;
 
 final class Book
 {
     private Uuid $id;
     private Title $title;
-    private string $author;
+    private Author $author;
     private Price $price;
-    private int $stock;
+    private Stock $stock;
 
-    public function __construct(Uuid $id, Title $title, string $author, Price $price, int $stock)
+    public function __construct(Uuid $id, Title $title, Author $author, Price $price, Stock $stock)
     {
         $this->id = $id;
         $this->title = $title;
         $this->author = $author;
         $this->price = $price;
-        $this->setStock($stock);
+        $this->stock = $stock;
     }
 
-    public function id(): Uuid
+    public function getId(): Uuid
     {
         return $this->id;
     }
 
-    public function title(): Title
+    public function getTitle(): Title
     {
         return $this->title;
     }
 
-    public function author(): string
+    public function getAuthor(): Author
     {
         return $this->author;
     }
 
-    public function price(): Price
+    public function getPrice(): Price
     {
         return $this->price;
     }
 
-    public function stock(): int
+    public function getStock(): Stock
     {
         return $this->stock;
-    }
-
-    public function setStock(int $stock): void
-    {
-        if ($stock < 0) {
-            throw new \InvalidArgumentException('Stock cannot be negative');
-        }
-        $this->stock = $stock;
     }
 }

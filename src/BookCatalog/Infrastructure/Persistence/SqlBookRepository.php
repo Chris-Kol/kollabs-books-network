@@ -7,9 +7,11 @@ namespace KollabsBooks\BookCatalog\Infrastructure\Persistence;
 use Aura\Sql\Exception\CannotBindValue;
 use KollabsBooks\BookCatalog\Domain\Entity\Book;
 use KollabsBooks\BookCatalog\Domain\Repository\BookRepositoryInterface;
-use KollabsBooks\Shared\Domain\ValueObject\Price;
-use KollabsBooks\Shared\Domain\ValueObject\Title;
-use KollabsBooks\Shared\Domain\ValueObject\Uuid;
+use KollabsBooks\BookCatalog\Domain\ValueObject\Author;
+use KollabsBooks\BookCatalog\Domain\ValueObject\Price;
+use KollabsBooks\BookCatalog\Domain\ValueObject\Stock;
+use KollabsBooks\BookCatalog\Domain\ValueObject\Title;
+use KollabsBooks\BookCatalog\Domain\ValueObject\Uuid;
 use KollabsBooks\Shared\Infrastructure\Persistence\DatabaseConnectionInterface;
 
 class SqlBookRepository implements BookRepositoryInterface
@@ -39,9 +41,9 @@ class SqlBookRepository implements BookRepositoryInterface
         return new Book(
             new Uuid($bookData['id']),
             new Title($bookData['title']),
-            $bookData['author'],
+            new Author($bookData['author']),
             new Price((int)($bookData['price'] * 100), 'USD'),
-            (int)$bookData['stock']
+            new Stock((int)$bookData['stock'])
         );
     }
 
@@ -52,18 +54,18 @@ class SqlBookRepository implements BookRepositoryInterface
     {
         $statement = sprintf(
             'INSERT INTO books (id, title, author, price, stock) VALUES (%s, %s, %s, %.02f, %d)',
-            $book->id()->value(),
-            $book->title()->value(),
-            $book->author(),
-            $book->price()->amount() / 100,
-            $book->stock()
+            $book->getId()->value(),
+            $book->getTitle()->getValue(),
+            $book->getAuthor()->getName(),
+            $book->getPrice()->getAmount() / 100,
+            $book->getStock()->getValue()
         );
         $duplicateStatement = sprintf(
             'DUPLICATE KEY UPDATE title = %s, author = %s, price = %.02f, stock = %d',
-            $book->title()->value(),
-            $book->author(),
-            $book->price()->amount() / 100,
-            $book->stock()
+            $book->getTitle()->getValue(),
+            $book->getAuthor()->getName(),
+            $book->getPrice()->getAmount() / 100,
+            $book->getStock()->getValue()
         );
         $this->db->execute(implode(' ON ', [$statement, $duplicateStatement]));
     }

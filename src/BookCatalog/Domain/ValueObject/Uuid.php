@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace KollabsBooks\Shared\Domain\ValueObject;
+namespace KollabsBooks\BookCatalog\Domain\ValueObject;
 
 use Ramsey\Uuid\Uuid as RamseyUuid;
 
