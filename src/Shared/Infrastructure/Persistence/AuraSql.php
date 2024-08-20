@@ -7,7 +7,7 @@ namespace KollabsBooks\Shared\Infrastructure\Persistence;
 use Aura\Sql\Exception\CannotBindValue;
 use Aura\Sql\ExtendedPdo;
 
-class AuraSqlConnection implements DatabaseConnectionInterface
+class AuraSql implements DatabaseInterface
 {
     private ExtendedPdo $pdo;
 

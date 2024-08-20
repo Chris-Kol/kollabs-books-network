@@ -7,6 +7,7 @@ namespace KollabsBooks\BookCatalog\Application\Service;
 use KollabsBooks\BookCatalog\Domain\Entity\Book;
 use KollabsBooks\BookCatalog\Domain\Repository\BookRepositoryInterface;
 use KollabsBooks\BookCatalog\Domain\ValueObject\Author;
+use KollabsBooks\BookCatalog\Domain\ValueObject\Collection\BookCollection;
 use KollabsBooks\BookCatalog\Domain\ValueObject\Price;
 use KollabsBooks\BookCatalog\Domain\ValueObject\Stock;
 use KollabsBooks\BookCatalog\Domain\ValueObject\Title;
@@ -47,7 +48,7 @@ final class BookService implements BookServiceInterface
         return $this->bookRepository->findById(new Uuid($id));
     }
 
-    public function getAllBooks(): array
+    public function getAllBooks(): BookCollection
     {
         return $this->bookRepository->findAll();
     }

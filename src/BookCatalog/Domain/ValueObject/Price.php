@@ -4,27 +4,42 @@ declare(strict_types=1);
 
 namespace KollabsBooks\BookCatalog\Domain\ValueObject;
 
+use Brick\Math\Exception\NumberFormatException;
+use Brick\Math\Exception\RoundingNecessaryException;
+use Brick\Money\Exception\UnknownCurrencyException;
+use Brick\Money\Money;
+
 final class Price
 {
-    private int $amount;
-    private string $currency;
+    private Money $money;
 
-    public function __construct(int $amount, string $currency = 'USD')
+    /**
+     * @throws UnknownCurrencyException
+     * @throws RoundingNecessaryException
+     * @throws NumberFormatException
+     */
+    public function __construct(float|int|string $amount, string $currency = 'EUR')
     {
-        if ($amount < 0) {
-            throw new \InvalidArgumentException('Amount cannot be negative');
-        }
-        $this->amount = $amount;
-        $this->currency = $currency;
+        $this->money = Money::of($amount, $currency);
     }
 
-    public function getAmount(): int
+    public function getAmountAsFloat(): float
     {
-        return $this->amount;
+        return $this->money->getAmount()->toFloat();
+    }
+
+    public function getAmount(): string
+    {
+        return $this->money->getAmount()->__toString();
     }
 
     public function getCurrency(): string
     {
-        return $this->currency;
+        return $this->money->getCurrency()->getCurrencyCode();
+    }
+
+    public function format(?string $locale = null): string
+    {
+        return $this->money->formatTo($locale ?? 'it_IT');
     }
 }

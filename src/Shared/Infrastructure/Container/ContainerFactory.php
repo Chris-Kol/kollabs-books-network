@@ -10,8 +10,8 @@ use KollabsBooks\BookCatalog\Application\Service\BookService;
 use KollabsBooks\BookCatalog\Infrastructure\Container\BookCatalogContainer;
 use KollabsBooks\BookCatalog\Infrastructure\Persistence\SqlBookRepository;
 use KollabsBooks\Shared\Infrastructure\Config\DatabaseConfig;
-use KollabsBooks\Shared\Infrastructure\Persistence\AuraSqlConnection;
-use KollabsBooks\Shared\Infrastructure\Persistence\DatabaseConnectionInterface;
+use KollabsBooks\Shared\Infrastructure\Persistence\AuraSql;
+use KollabsBooks\Shared\Infrastructure\Persistence\DatabaseInterface;
 
 class ContainerFactory
 {
@@ -20,9 +20,9 @@ class ContainerFactory
         $containerBuilder = new ContainerBuilder();
 
         $containerBuilder->addDefinitions([
-            DatabaseConnectionInterface::class => function() {
+            DatabaseInterface::class => function() {
                 $config = DatabaseConfig::getConfig();
-                return new AuraSqlConnection(
+                return new AuraSql(
                     $config['dsn'],
                     $config['username'],
                     $config['password']

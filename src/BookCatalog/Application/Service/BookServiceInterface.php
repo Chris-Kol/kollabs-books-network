@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace KollabsBooks\BookCatalog\Application\Service;
 
 use KollabsBooks\BookCatalog\Domain\Entity\Book;
+use KollabsBooks\BookCatalog\Domain\ValueObject\Collection\BookCollection;
 
 interface BookServiceInterface
 {
@@ -17,5 +18,5 @@ interface BookServiceInterface
         int $stock
     ): Book;
     public function getBook(string $id): ?Book;
-    public function getAllBooks(): array;
+    public function getAllBooks(): BookCollection;
 }

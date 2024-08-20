@@ -6,7 +6,7 @@ namespace KollabsBooks\Shared\Infrastructure\Persistence;
 
 use Aura\Sql\Exception\CannotBindValue;
 
-interface DatabaseConnectionInterface
+interface DatabaseInterface
 {
     public function fetchAll(string $statement, array $values = []): array;
     public function fetchOne(string $statement, array $values = []): ?array;
