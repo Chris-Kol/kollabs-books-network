@@ -19,11 +19,6 @@ final class BookCollection extends Collection
         parent::__construct($books);
     }
 
-    public function remove(Book $book): self
-    {
-        return new self(...array_filter($this->items, fn (Book $item) => $item !== $book));
-    }
-
     public function toArray(): array
     {
         return array_map(fn (Book $book) =>

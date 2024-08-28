@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace KollabsBooks\BookCatalog\Domain\ValueObject;
 
-use KollabsBooks\Shared\Domain\Trait\NonEmptyStringTrait;
+use KollabsBooks\Shared\Domain\Traits\NonEmptyStringTrait;
 
 final class Author
 {

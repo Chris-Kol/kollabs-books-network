@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace KollabsBooks\Shared\Domain\Trait;
+namespace KollabsBooks\Shared\Domain\Traits;
 
 trait NonEmptyStringTrait
 {

@@ -7,9 +7,7 @@ namespace KollabsBooks\Shared\Infrastructure\Container;
 use Aura\SqlQuery\QueryFactory;
 use DI\Container;
 use DI\ContainerBuilder;
-use KollabsBooks\BookCatalog\Application\Service\BookService;
 use KollabsBooks\BookCatalog\Infrastructure\Container\BookCatalogContainer;
-use KollabsBooks\BookCatalog\Infrastructure\Persistence\SqlBookRepository;
 use KollabsBooks\Shared\Infrastructure\Config\DatabaseConfig;
 use KollabsBooks\Shared\Infrastructure\Persistence\AuraSql;
 use KollabsBooks\Shared\Infrastructure\Persistence\DatabaseInterface;
@@ -24,7 +22,7 @@ class ContainerFactory
         $containerBuilder = new ContainerBuilder();
 
         $containerBuilder->addDefinitions([
-            DatabaseInterface::class => function() {
+            DatabaseInterface::class => function () {
                 $config = DatabaseConfig::getConfig();
                 return new AuraSql(
                     $config['dsn'],

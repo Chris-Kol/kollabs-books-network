@@ -38,7 +38,7 @@ final class Price
         return $this->money->getCurrency()->getCurrencyCode();
     }
 
-    public function format(?string $locale = null): string
+    public function formatted(?string $locale = null): string
     {
         return $this->money->formatTo($locale ?? 'it_IT');
     }
