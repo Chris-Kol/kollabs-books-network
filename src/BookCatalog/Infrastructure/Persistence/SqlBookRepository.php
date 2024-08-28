@@ -9,6 +9,7 @@ use Aura\SqlQuery\QueryFactory;
 use Brick\Math\Exception\NumberFormatException;
 use Brick\Math\Exception\RoundingNecessaryException;
 use Brick\Money\Exception\UnknownCurrencyException;
+use InvalidArgumentException;
 use KollabsBooks\BookCatalog\Domain\Entity\Book;
 use KollabsBooks\BookCatalog\Domain\Repository\BookRepositoryInterface;
 use KollabsBooks\BookCatalog\Domain\ValueObject\Author;
@@ -40,9 +41,7 @@ final class SqlBookRepository implements BookRepositoryInterface
     }
 
     /**
-     * @throws UnknownCurrencyException
-     * @throws NumberFormatException
-     * @throws RoundingNecessaryException
+     * @throws InvalidArgumentException
      */
     public function findById(Uuid $id): ?Book
     {
@@ -53,19 +52,26 @@ final class SqlBookRepository implements BookRepositoryInterface
     }
 
     /**
-     * @throws UnknownCurrencyException
-     * @throws NumberFormatException
-     * @throws RoundingNecessaryException
+     * @throws InvalidArgumentException
      */
     private function createBookFromArray(array $bookData): Book
     {
-        return new Book(
-            new Uuid($bookData['id']),
-            new Title($bookData['title']),
-            new Author($bookData['author']),
-            new Price((int)($bookData['price'] * 100), 'EUR'),
-            new Stock((int)$bookData['stock'])
-        );
+        try {
+            return new Book(
+                new Uuid($bookData['id']),
+                new Title($bookData['title']),
+                new Author($bookData['author']),
+                new Price((int)($bookData['price'] * 100), 'EUR'),
+                new Stock((int)$bookData['stock'])
+            );
+        } catch (
+            NumberFormatException |
+            UnknownCurrencyException |
+            RoundingNecessaryException |
+            InvalidArgumentException $e
+        ) {
+            throw new InvalidArgumentException('Invalid book data', 0, $e);
+        }
     }
 
     /**

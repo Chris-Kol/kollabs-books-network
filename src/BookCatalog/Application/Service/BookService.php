@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace KollabsBooks\BookCatalog\Application\Service;
 
+use Brick\Math\Exception\NumberFormatException;
+use Brick\Math\Exception\RoundingNecessaryException;
+use Brick\Money\Exception\UnknownCurrencyException;
+use InvalidArgumentException;
 use KollabsBooks\BookCatalog\Domain\Entity\Book;
 use KollabsBooks\BookCatalog\Domain\Repository\BookRepositoryInterface;
 use KollabsBooks\BookCatalog\Domain\ValueObject\Author;
@@ -22,6 +26,12 @@ final class BookService implements BookServiceInterface
         $this->bookRepository = $bookRepository;
     }
 
+    /**
+     * @throws UnknownCurrencyException
+     * @throws NumberFormatException
+     * @throws RoundingNecessaryException
+     * @throws InvalidArgumentException
+     */
     public function createBook(
         string $id,
         string $title,
@@ -43,6 +53,11 @@ final class BookService implements BookServiceInterface
         return $book;
     }
 
+    /**
+     * @throws UnknownCurrencyException
+     * @throws NumberFormatException
+     * @throws RoundingNecessaryException
+     */
     public function getBook(string $id): ?Book
     {
         return $this->bookRepository->findById(new Uuid($id));

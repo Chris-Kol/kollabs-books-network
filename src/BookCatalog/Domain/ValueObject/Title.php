@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace KollabsBooks\BookCatalog\Domain\ValueObject;
 
+use InvalidArgumentException;
 use KollabsBooks\Shared\Domain\Traits\NonEmptyStringTrait;
 
 final class Title
@@ -12,6 +13,9 @@ final class Title
 
     private string $value;
 
+    /**
+     * @throws InvalidArgumentException
+     */
     public function __construct(string $value)
     {
         $this->validateNonEmptyString($value);
