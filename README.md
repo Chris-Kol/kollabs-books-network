@@ -1,7 +1,17 @@
-![Welcome to the party, pal!](https://media.giphy.com/media/l0MYGb1LuZ3n7dRnO/giphy.gif)
+<p align="center">
+  <img src="https://media.giphy.com/media/l0MYGb1LuZ3n7dRnO/giphy.gif" alt="Welcome to the party, pal!">
+</p>
 
 # Kollabs Books Network (kollabs-books-network)
 This project is our playground for implementing new technologies and sharing those experiments with our dev buddies over at [The Kollabs Chronicle](https://kollabs.dev/). It's like a sandbox, but instead of sand, we've got code. And instead of toys, we've got... well, more code.
+
+🔧 Prerequisites
+
+Docker (our magical container maker)
+Docker Compose (the conductor of our container orchestra)
+
+Docker and Docker Compose usually come together in most installations, but if you're not sure, run docker --version and docker-compose --version in your terminal. If either is missing, check out the official Docker documentation for installation instructions.
+
 
 ## 🚀 Quick Start
 
@@ -25,14 +35,15 @@ This project is our playground for implementing new technologies and sharing tho
    docker-compose exec php composer install
    ```
 
-5. **Visit `http://localhost:8000` and bask in the glory of your new book emporium!**
+5. **Visit `http://localhost:8000`**
 
-![It's alive!](https://media.giphy.com/media/3o84sq21TxDH6PyYms/giphy.gif)
+<p align="center">
+  <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExd2xtNTJ2b3ZiOGx5ZnFtbjlkeThuZTZvdXpoczljamI4MWk4eDJ3ZCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/puLoPc5QKdaIUazm9X/giphy.gif" alt="It's alive!">
+</p>
 
-## 🛠️ What's in the Box?
+🛠️ What's in Our Sandbox?
 
 - PHP 8.3 (because we're living on the edge!)
-- Slim Framework (for that svelte figure)
+- Slim Framework (our lightweight PHP micro-framework)
 - MySQL (where all our book secrets are stored)
-- Nginx (because Apache is so last season)
-- Docker (for those "it works on my machine" moments)
+- Nginx (our trusty web server)
