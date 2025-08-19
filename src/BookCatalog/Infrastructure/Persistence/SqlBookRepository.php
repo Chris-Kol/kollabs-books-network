@@ -50,7 +50,7 @@ final class SqlBookRepository implements BookRepositoryInterface
                 new Uuid($bookData['id']),
                 new Title($bookData['title']),
                 new Author($bookData['author']),
-                new Price($bookData['price'], 'EUR'),
+                new Price((float)$bookData['price'], 'EUR'),
                 new Stock((int)$bookData['stock'])
             );
         } catch (InvalidArgumentException $e) {
