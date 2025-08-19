@@ -48,7 +48,7 @@ final class BookService implements BookServiceInterface
             new Stock($stock)
         );
 
-        $this->bookRepository->save($book);
+        $this->bookRepository->saveBook($book);
 
         return $book;
     }
@@ -60,11 +60,11 @@ final class BookService implements BookServiceInterface
      */
     public function getBook(string $id): ?Book
     {
-        return $this->bookRepository->findById(new Uuid($id));
+        return $this->bookRepository->getBookById(new Uuid($id));
     }
 
     public function getAllBooks(): BookCollection
     {
-        return $this->bookRepository->findAll();
+        return $this->bookRepository->getAllBooks();
     }
 }

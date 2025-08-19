@@ -31,7 +31,7 @@ final class SqlBookRepository implements BookRepositoryInterface
         $this->db = $db;
     }
 
-    public function findAll(): BookCollection
+    public function getAllBooks(): BookCollection
     {
         $selectQuery = $this->queryFactory->newSelect();
         $selectQuery->cols(['*'])->from('books');
@@ -43,7 +43,7 @@ final class SqlBookRepository implements BookRepositoryInterface
     /**
      * @throws InvalidArgumentException
      */
-    public function findById(Uuid $id): ?Book
+    public function getBookById(Uuid $id): ?Book
     {
         $selectQuery = $this->queryFactory->newSelect();
         $selectQuery->cols(['*'])->from('books')->where('id = :id')->bindValue('id', $id->getValue());
@@ -77,7 +77,7 @@ final class SqlBookRepository implements BookRepositoryInterface
     /**
      * @throws CannotBindValue
      */
-    public function save(Book $book): void
+    public function saveBook(Book $book): void
     {
         $insertQuery = $this->queryFactory->newInsert();
         $insertQuery->into('books')->cols([
