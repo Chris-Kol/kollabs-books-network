@@ -4,51 +4,40 @@ declare(strict_types=1);
 
 namespace KollabsBooks\BookCatalog\Infrastructure\Persistence;
 
-use Aura\Sql\Exception\CannotBindValue;
-use Aura\SqlQuery\QueryFactory;
-use Brick\Math\Exception\NumberFormatException;
-use Brick\Math\Exception\RoundingNecessaryException;
-use Brick\Money\Exception\UnknownCurrencyException;
 use InvalidArgumentException;
 use KollabsBooks\BookCatalog\Domain\Entity\Book;
 use KollabsBooks\BookCatalog\Domain\Repository\BookRepositoryInterface;
 use KollabsBooks\BookCatalog\Domain\ValueObject\Author;
 use KollabsBooks\BookCatalog\Domain\ValueObject\Collection\BookCollection;
-use KollabsBooks\BookCatalog\Domain\ValueObject\Price;
 use KollabsBooks\BookCatalog\Domain\ValueObject\Stock;
 use KollabsBooks\BookCatalog\Domain\ValueObject\Title;
 use KollabsBooks\BookCatalog\Domain\ValueObject\Uuid;
-use KollabsBooks\Shared\Infrastructure\Persistence\DatabaseInterface;
+use KollabsBooks\Shared\Domain\ValueObject\Price;
+use Pixie\QueryBuilder\QueryBuilderHandler;
 
 final class SqlBookRepository implements BookRepositoryInterface
 {
-    private DatabaseInterface $db;
-    private QueryFactory $queryFactory;
+    private QueryBuilderHandler $qb;
 
-    public function __construct(DatabaseInterface $db, QueryFactory $queryFactory)
+    public function __construct(QueryBuilderHandler $qb)
     {
-        $this->queryFactory = $queryFactory;
-        $this->db = $db;
+        $this->qb = $qb;
     }
 
-    public function getAllBooks(): BookCollection
+    public function findAll(): BookCollection
     {
-        $selectQuery = $this->queryFactory->newSelect();
-        $selectQuery->cols(['*'])->from('books');
-        $booksData = $this->db->fetchAll($selectQuery->getStatement());
-        $books = array_map([$this, 'createBookFromArray'], $booksData);
+        $booksData = $this->qb->table('books')->orderBy('title')->get();
+        $books = array_map(fn($bookData) => $this->createBookFromArray((array)$bookData), $booksData);
         return new BookCollection($books);
     }
 
     /**
      * @throws InvalidArgumentException
      */
-    public function getBookById(Uuid $id): ?Book
+    public function findBookById(Uuid $id): ?Book
     {
-        $selectQuery = $this->queryFactory->newSelect();
-        $selectQuery->cols(['*'])->from('books')->where('id = :id')->bindValue('id', $id->getValue());
-        $bookData = $this->db->fetchOne($selectQuery->getStatement());
-        return $bookData ? $this->createBookFromArray($bookData) : null;
+        $bookData = $this->qb->table('books')->where('id', $id->getValue())->first();
+        return $bookData ? $this->createBookFromArray((array)$bookData) : null;
     }
 
     /**
@@ -61,38 +50,62 @@ final class SqlBookRepository implements BookRepositoryInterface
                 new Uuid($bookData['id']),
                 new Title($bookData['title']),
                 new Author($bookData['author']),
-                new Price((int)($bookData['price'] * 100), 'EUR'),
+                new Price($bookData['price'], 'EUR'),
                 new Stock((int)$bookData['stock'])
             );
-        } catch (
-            NumberFormatException |
-            UnknownCurrencyException |
-            RoundingNecessaryException |
-            InvalidArgumentException $e
-        ) {
+        } catch (InvalidArgumentException $e) {
             throw new InvalidArgumentException('Invalid book data', 0, $e);
         }
     }
 
-    /**
-     * @throws CannotBindValue
-     */
-    public function saveBook(Book $book): void
+    public function store(Book $book): void
     {
-        $insertQuery = $this->queryFactory->newInsert();
-        $insertQuery->into('books')->cols([
+        $data = [
             'id' => $book->getId()->getValue(),
             'title' => $book->getTitle()->getValue(),
             'author' => $book->getAuthor()->getName(),
-            'price' => $book->getPrice()->getAmountAsFloat() / 100,
+            'price' => $book->getPrice()->getAmount(),
             'stock' => $book->getStock()->getValue()
-        ])->onDuplicateKeyUpdateCols([
+        ];
+
+        // Check if book exists
+        $existing = $this->qb->table('books')->where('id', $book->getId()->getValue())->first();
+        
+        if ($existing) {
+            // Update existing book
+            $this->qb->table('books')->where('id', $book->getId()->getValue())->update([
+                'title' => $data['title'],
+                'author' => $data['author'],
+                'price' => $data['price'],
+                'stock' => $data['stock']
+            ]);
+        } else {
+            // Insert new book
+            $this->qb->table('books')->insert($data);
+        }
+    }
+
+    public function add(Book $book): void
+    {
+        // Only insert, don't update - will fail if ID already exists
+        $data = [
+            'id' => $book->getId()->getValue(),
             'title' => $book->getTitle()->getValue(),
             'author' => $book->getAuthor()->getName(),
-            'price' => $book->getPrice()->getAmountAsFloat() / 100,
+            'price' => $book->getPrice()->getAmount(),
             'stock' => $book->getStock()->getValue()
-        ]);
+        ];
 
-        $this->db->execute($insertQuery->getStatement());
+        $this->qb->table('books')->insert($data);
+    }
+
+    public function remove(Uuid $id): bool
+    {
+        // Use Pixie query builder for delete
+        // Pixie returns a PDOStatement, we can get affected row count from it
+        $statement = $this->qb->table('books')->where('id', $id->getValue())->delete();
+        
+        // Return true if any rows were affected (deleted)
+        return $statement->rowCount() > 0;
     }
 }

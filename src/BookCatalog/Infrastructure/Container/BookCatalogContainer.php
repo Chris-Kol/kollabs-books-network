@@ -9,7 +9,6 @@ use KollabsBooks\BookCatalog\Application\Service\BookServiceInterface;
 use KollabsBooks\BookCatalog\Domain\Repository\BookRepositoryInterface;
 use KollabsBooks\BookCatalog\Infrastructure\Persistence\SqlBookRepository;
 use KollabsBooks\Shared\Infrastructure\Container\DomainContainerInterface;
-use KollabsBooks\Shared\Infrastructure\Persistence\DatabaseInterface;
 
 use function DI\autowire;
 use function DI\create;
@@ -21,8 +20,7 @@ class BookCatalogContainer implements DomainContainerInterface
     {
         return [
             BookRepositoryInterface::class => create(SqlBookRepository::class)->constructor(
-                get(DatabaseInterface::class),
-                get('queryFactory')
+                get('pixieQueryBuilder')
             ),
             BookServiceInterface::class => autowire(BookService::class),
         ];

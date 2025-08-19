@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace KollabsBooks\Shared\Infrastructure\Container;
 
-use Aura\SqlQuery\QueryFactory;
 use DI\Container;
 use DI\ContainerBuilder;
 use KollabsBooks\BookCatalog\Infrastructure\Container\BookCatalogContainer;
 use KollabsBooks\Shared\Infrastructure\Config\DatabaseConfig;
-use KollabsBooks\Shared\Infrastructure\Persistence\AuraSql;
-use KollabsBooks\Shared\Infrastructure\Persistence\DatabaseInterface;
+use Pixie\Connection;
+use Pixie\QueryBuilder\QueryBuilderHandler;
 
 class ContainerFactory
 {
@@ -22,15 +21,16 @@ class ContainerFactory
         $containerBuilder = new ContainerBuilder();
 
         $containerBuilder->addDefinitions([
-            DatabaseInterface::class => function () {
+            'pixieQueryBuilder' => function () {
                 $config = DatabaseConfig::getConfig();
-                return new AuraSql(
-                    $config['dsn'],
-                    $config['username'],
-                    $config['password']
-                );
+                $connection = new Connection('mysql', [
+                    'host' => $config['host'],
+                    'database' => $config['database'],
+                    'username' => $config['username'],
+                    'password' => $config['password'],
+                ]);
+                return new QueryBuilderHandler($connection);
             },
-            'queryFactory' => new QueryFactory('mysql'),
         ]);
 
         // Domain-specific definitions

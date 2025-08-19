@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace KollabsBooks\Shared\Infrastructure\Http;
 
 use Exception;
-use KollabsBooks\BookCatalog\Infrastructure\Http\BookCatalogRoutes;
 use KollabsBooks\Shared\Infrastructure\Container\ContainerFactory;
 use Slim\Factory\AppFactory;
 use Slim\App as SlimApp;

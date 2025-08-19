@@ -14,8 +14,10 @@ interface BookRepositoryInterface
     /**
      * @throws InvalidArgumentException
      */
-    public function getBookById(Uuid $id): ?Book;
+    public function findBookById(Uuid $id): ?Book;
 
-    public function saveBook(Book $book): void;
-    public function getAllBooks(): BookCollection;
+    public function store(Book $book): void;
+    public function add(Book $book): void;
+    public function findAll(): BookCollection;
+    public function remove(Uuid $id): bool;
 }

@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace KollabsBooks\BookCatalog\Domain\ValueObject\Collection;
 
-use Bag\Collection;
 use InvalidArgumentException;
 use KollabsBooks\BookCatalog\Domain\Entity\Book;
 
-final class BookCollection extends Collection
+final class BookCollection
 {
+    private array $books;
+
     /**
      * @throws InvalidArgumentException
      */
@@ -20,7 +21,7 @@ final class BookCollection extends Collection
                 throw new InvalidArgumentException('All items must be instances of Book');
             }
         }
-        parent::__construct($books);
+        $this->books = $books;
     }
 
     public function toArray(): array
@@ -31,11 +32,11 @@ final class BookCollection extends Collection
                 'title' => $book->getTitle()->getValue(),
                 'author' => $book->getAuthor()->getName(),
                 'price' => [
-                    'amount' => $book->getPrice()->getAmountAsFloat(),
+                    'amount' => $book->getPrice()->getAmount(),
                     'currency' => $book->getPrice()->getCurrency()
                 ],
                 'stock' => $book->getStock()->getValue(),
-            ], $this->items
+            ], $this->books
         );
     }
 }
